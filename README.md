@@ -187,6 +187,7 @@ If you have any questions, open an issue or reach out!
 ---
 
 **Happy Building!** 🚀✨
+
 **#PeriPrice #DynamicPricing #FastAPI #Streamlit**
 
 ---
