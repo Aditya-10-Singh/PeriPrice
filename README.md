@@ -1,13 +1,4 @@
-# PeriPrice
-Absolutely! Here’s a **detailed `README.md`** you can use for your **PeriPrice Dynamic Pricing System** — it’s clear, clean, and includes setup, features, tech stack, and how to run it step by step.
-
----
-
-## 📄 **README.md**
-
----
-
-# 🛒 PeriPrice — Smart Dynamic Pricing & Inventory Management
+# PeriPrice — Smart Dynamic Pricing & Inventory Management
 
 **PeriPrice** is a full-stack dynamic pricing dashboard for perishable goods — built with **FastAPI**, **SQLite**, **Machine Learning**, and a **Streamlit** UI.
 It helps businesses manage inventory, predict prices dynamically, record sales, and monitor trends — all in one place!
@@ -86,8 +77,8 @@ Follow these **step-by-step** instructions:
 ### 1️⃣ **Clone this repo**
 
 ```bash
-git clone https://github.com/yourusername/periprice.git
-cd periprice
+git clone https://github.com/Aditya-10-Singh/PeriPrice.git
+cd DynamicPricingProject
 ```
 
 ---
@@ -113,12 +104,10 @@ pip install -r requirements.txt
 ```txt
 fastapi
 uvicorn
+scikit-learn
 pandas
 numpy
-scikit-learn
-sqlite3
 streamlit
-requests
 ```
 
 ---
@@ -128,7 +117,7 @@ requests
 Run this once to create `perishables.db`:
 
 ```bash
-python setup_db.py
+python init_db.py
 ```
 
 *(This script creates `inventory` and `sales` tables, and inserts sample data)*
@@ -182,12 +171,6 @@ This opens a **login page** → then your full dashboard.
 
 ✅ Host on **Heroku**, **Railway**, or **Render**.
 
----
-
-## 🙌 **Authors**
-
-* **You!** 🚀
-* Built with ❤️ using Python, FastAPI, Streamlit.
 
 ---
 
@@ -208,12 +191,4 @@ If you have any questions, open an issue or reach out!
 
 ---
 
-### 📎 **Bonus**
 
-If you want, I can also generate:
-
-* A `requirements.txt`
-* A `setup_db.py` to create tables + seed data
-* Starter Dockerfile if you plan to deploy.
-
-Just say **“yes, make them too!”** and I’ll generate them for you.
