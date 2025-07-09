@@ -8,13 +8,11 @@ from datetime import datetime
 
 app = FastAPI()
 
-# ✅ Load trained ML model
 with open("model/model.pkl", "rb") as f:
     model = pickle.load(f)
 
 DB_FILE = "../perishables.db"
 
-# ✅ Models for request bodies
 class Item(BaseModel):
     stock: int
     units_sold: int
@@ -30,7 +28,6 @@ class SellItem(BaseModel):
     product_id: int
     quantity: int
 
-# ✅ Predict price with business rules
 @app.post("/predict_price")
 def predict_price(item: Item):
     X_new = np.array([[item.stock, item.units_sold, item.days_left, item.day_of_week, item.discount_flag]])
@@ -44,7 +41,6 @@ def predict_price(item: Item):
 
     return {"predicted_price": round(final_price, 2)}
 
-# ✅ Get entire inventory
 @app.get("/get_inventory")
 def get_inventory():
     conn = sqlite3.connect(DB_FILE)
@@ -54,7 +50,6 @@ def get_inventory():
     conn.close()
     return {"inventory": rows}
 
-# ✅ Manual price override
 @app.post("/update_price")
 def update_price(data: UpdatePrice):
     conn = sqlite3.connect(DB_FILE)
@@ -64,7 +59,6 @@ def update_price(data: UpdatePrice):
     conn.close()
     return {"status": "success", "updated_product_id": data.product_id}
 
-# ✅ Predict and directly update price
 @app.post("/predict_and_update")
 def predict_and_update(item: Item):
     X_new = np.array([[item.stock, item.units_sold, item.days_left, item.day_of_week, item.discount_flag]])
@@ -76,7 +70,6 @@ def predict_and_update(item: Item):
     if item.stock >= 80:
         final_price *= 0.9
 
-    # Example: update product_id = 1
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("UPDATE inventory SET price = ? WHERE product_id = ?", (round(final_price, 2), 1))
@@ -85,13 +78,12 @@ def predict_and_update(item: Item):
 
     return {"predicted_price": round(final_price, 2), "status": "price_updated"}
 
-# ✅ POS simulation: sell item + insert sale record
+# POS simulation
 @app.post("/sell_item")
 def sell_item(sale: SellItem):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
-    # Check current stock & price
     c.execute("SELECT stock, price FROM inventory WHERE product_id = ?", (sale.product_id,))
     row = c.fetchone()
     if row is None:
@@ -104,11 +96,9 @@ def sell_item(sale: SellItem):
         conn.close()
         return JSONResponse(content={"error": "Not enough stock"}, status_code=400)
 
-    # Update inventory stock
     new_stock = current_stock - sale.quantity
     c.execute("UPDATE inventory SET stock = ? WHERE product_id = ?", (new_stock, sale.product_id))
 
-    # Insert new sale record
     today = datetime.today().strftime("%Y-%m-%d")
     c.execute(
         "INSERT INTO sales (product_id, sale_date, units_sold, price_sold) VALUES (?, ?, ?, ?)",

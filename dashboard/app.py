@@ -5,14 +5,11 @@ import streamlit as st
 import requests
 import hashlib
 
-# --- CONFIG ---
 DB_FILE = "../perishables.db"
 FASTAPI_URL = "http://127.0.0.1:8000"
 
-# --- PAGE CONFIG ---
 st.set_page_config(page_title="PeriPrice", page_icon="📊", layout="wide")
 
-# --- STYLES ---
 st.markdown("""
     <style>
     body { background-color: #f8f9fc; }
@@ -22,7 +19,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- HELPERS ---
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -41,13 +37,11 @@ def create_users_table():
 
 create_users_table()
 
-# --- SESSION ---
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
     st.session_state.username = ""
 
-# --- AUTH ---
 if not st.session_state.logged_in:
     col1, col2 = st.columns(2)
 
@@ -89,10 +83,8 @@ if not st.session_state.logged_in:
                     st.error("❌ Invalid credentials")
     st.stop()
 
-# --- DASHBOARD ---
 st.title(f"📊 PeriPrice Dashboard — Hello, {st.session_state.username}!")
 
-# --- LOAD DATA ---
 conn = sqlite3.connect(DB_FILE)
 df = pd.read_sql_query("SELECT * FROM inventory", conn)
 try:
@@ -101,13 +93,11 @@ except:
     sales_df = pd.DataFrame()
 conn.close()
 
-# --- Expiry Alert ---
 expiring = df[df['days_left'] <= 2]
 if not expiring.empty:
     st.warning(f"⚠ {len(expiring)} items expiring soon!")
     st.dataframe(expiring)
 
-# --- Inventory Table ---
 st.subheader("📦 Full Inventory")
 def highlight(row):
     if row['days_left'] <= 2:
@@ -118,7 +108,6 @@ def highlight(row):
         return ['']*len(row)
 st.dataframe(df.style.apply(highlight, axis=1))
 
-# --- Predict Price ---
 st.subheader("💰 Predict Price")
 with st.form("predict_form"):
     pid = st.number_input("Product ID", min_value=1, step=1)
@@ -143,7 +132,6 @@ with st.form("predict_form"):
         else:
             st.error("❌ Prediction failed.")
 
-# --- Manual Price Update ---
 st.subheader("✏ Manual Price Update")
 pid = st.number_input("Product ID to Update", min_value=1, step=1, key="pid_update")
 new_price = st.number_input("New Price", min_value=0.0, format="%.2f")
@@ -156,7 +144,6 @@ if st.button("Update Price"):
     else:
         st.error("❌ Update failed.")
 
-# --- Simulate Sale ---
 st.subheader("🛒 Make a Sale")
 sid = st.number_input("Product ID to Sell", min_value=1, step=1)
 qty = st.number_input("Quantity Sold", min_value=1, step=1)
@@ -170,7 +157,6 @@ if st.button("Record Sale"):
     else:
         st.error("❌ Sale failed. Check stock!")
 
-# --- Sales Trend ---
 st.subheader("📈 Sales Trend")
 if not sales_df.empty:
     sales_df['sale_date'] = pd.to_datetime(sales_df['sale_date'])
@@ -180,7 +166,6 @@ if not sales_df.empty:
 else:
     st.info("ℹ No sales data yet.")
 
-# --- Logout ---
 if st.button("🚪 Logout"):
     st.session_state.logged_in = False
     st.session_state.username = ""
