@@ -7,7 +7,7 @@ import hashlib
 from datetime import datetime
 
 DB_FILE = "../perishables.db"
-FASTAPI_URL = "http://127.0.0.1:8000"
+FASTAPI_URL = "https://periprice.onrender.com"
 
 st.set_page_config(page_title="PeriPrice", page_icon="📊", layout="wide")
 
