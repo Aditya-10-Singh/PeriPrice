@@ -114,3 +114,7 @@ def sell_item(sale: SellItem):
         "quantity_sold": sale.quantity,
         "remaining_stock": new_stock
     }
+
+@app.get("/")
+def read_root():
+    return JSONResponse(content={"message": "🚀 PeriPrice API is live! Use /predict_price, /get_inventory, /sell_item, etc."})
