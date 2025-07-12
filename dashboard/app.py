@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 import requests
 import hashlib
+from datetime import datetime
 
 DB_FILE = "../perishables.db"
 FASTAPI_URL = "http://127.0.0.1:8000"
@@ -87,20 +88,24 @@ st.title(f"📊 PeriPrice Dashboard — Hello, {st.session_state.username}!")
 
 conn = sqlite3.connect(DB_FILE)
 df = pd.read_sql_query("SELECT * FROM inventory", conn)
+ 
+today = datetime.today().date()
+df['days_left'] = df['expiry_date'].apply(lambda x: (datetime.strptime(x, "%Y-%m-%d").date() - today).days)
+
 try:
     sales_df = pd.read_sql_query("SELECT * FROM sales", conn)
 except:
     sales_df = pd.DataFrame()
 conn.close()
 
-expiring = df[df['days_left'] <= 2]
+expiring = df[df['days_left'] <= 4]
 if not expiring.empty:
     st.warning(f"⚠ {len(expiring)} items expiring soon!")
     st.dataframe(expiring)
 
 st.subheader("📦 Full Inventory")
 def highlight(row):
-    if row['days_left'] <= 2:
+    if row['days_left'] <= 5:
         return ['background-color: yellow']*len(row)
     elif row['stock'] <= 10:
         return ['background-color: red']*len(row)

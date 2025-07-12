@@ -16,7 +16,8 @@ for product in products:
     stock = random.randint(50, 100)
     for day in range(num_days):
         date = start_date + timedelta(days=day)
-        expiry = start_date + timedelta(days=product['Shelf_Life'])
+        shelf_life_variation = random.randint(-2, 2)
+        expiry = start_date + timedelta(days=product['Shelf_Life'] + shelf_life_variation)
         days_left = (expiry - date).days
         price = product['Base_Price']
         
