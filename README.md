@@ -1,7 +1,6 @@
 # PeriPrice — Smart Dynamic Pricing & Inventory Management
 
-**PeriPrice** is a full-stack dynamic pricing dashboard for perishable goods — built with **FastAPI**, **SQLite**, **Machine Learning**, and a **Streamlit** UI.
-It helps businesses manage inventory, predict prices dynamically, record sales, and monitor trends — all in one place!
+A smart dynamic pricing and inventory system for perishable goods. It uses a **Random Forest** model to predict prices based on stock, sales, and expiry dates. A **FastAPI** backend handles predictions and updates, while a **Streamlit** dashboard lets you monitor, adjust prices, and track sales, helping businesses cut waste and boost revenue.
 
 ---
 
